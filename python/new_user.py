@@ -1,4 +1,5 @@
 from BD_query import BD_query
+from BD_query import get_sql
 from config import mysql_config
 def new_user(message):
 	user = BD_query(get_sql(**mysql_config), "SELECT", "users", columns=["id", "name", "level", "bot_status", "additional_parameter"], \
