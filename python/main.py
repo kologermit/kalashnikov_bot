@@ -25,10 +25,15 @@ while True:
     except HTTPSConnectionPool as err:
         print(err)
 
+@bot.message_handler(commands=["start"])
+def start(message):
+	user = BD_query(get_sql(**mysql_config), "SELECT", "users", columns=["name", "surname"], \
+        where=[("id", "=", message.chat.id)], limit=1)
+	print(user)
+
 # Обработчик присланных пользователем сообщений
 @bot.message_handler(content_types=['text'])
 def main1(message):
-	print(1)
 
 while True:
     try:
