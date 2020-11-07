@@ -1,12 +1,10 @@
 from telebot import types
 def markups(commands, resize=True):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=resize)
-    if not resize:
-        for key in commands:
-            markup.add(types.KeyboardButton(key))
-    else:
-        for i in range(len(commands)):
-            commands[i] = (types.KeyboardButton(commands[i]))
-        markup.add(*commands)
-    markup.add(types.KeyboardButton("Меню"))
+    for key in commands:
+        if key["resize"] == True:
+            markup.add(*(types.KeyboardButton(i) for i in key["commands"]))
+        else:
+            for i in key["commands"]:
+                markup.add(types.KeyboardButton(i))
     return markup
