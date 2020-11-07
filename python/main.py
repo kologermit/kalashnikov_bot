@@ -17,6 +17,7 @@ from config import TOKEN
 from config import mysql_config
 from log_query import log_query
 from start_markup import start_markup
+from new_user import new_user
   
 # Подключение у боту в базе данных
 while True:
@@ -33,16 +34,7 @@ answers = json.loads(answers)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-	user = BD_query(get_sql(**mysql_config), "SELECT", "users", columns=["name"], \
-        where=[("id", "=", message.chat.id)], limit=1)
-	if len(user) == 0:
-		BD_query(get_sql(**mysql_config), "INSERT", "users", data=[{
-			"id": message.chat.id,
-			"name": f"{message.chat.first_name} {message.chat.last_name}",
-			"level": 1,
-			"bot_status": 1,
-			"additional_parameter": ""
-		}])
+	new_user(message)
 	log_query(get_sql(**mysql_config), 
 		date=datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M:%S"),
 		chat_id=message.chat.id,
@@ -55,7 +47,8 @@ def start(message):
 # Обработчик присланных пользователем сообщений
 @bot.message_handler(content_types=['text'])
 def main1(message):
-	pass
+	user = new_user(message)
+
 while True:
     try:
         bot.polling(none_stop=True)
